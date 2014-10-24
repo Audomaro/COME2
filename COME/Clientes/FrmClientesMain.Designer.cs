@@ -148,7 +148,6 @@
             // 
             this.BarBtnPDF.Caption = "Exportar a PDF";
             this.BarBtnPDF.CategoryGuid = new System.Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
-            this.BarBtnPDF.Enabled = false;
             this.BarBtnPDF.Glyph = ((System.Drawing.Image)(resources.GetObject("BarBtnPDF.Glyph")));
             this.BarBtnPDF.Id = 15;
             this.BarBtnPDF.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("BarBtnPDF.LargeGlyph")));
@@ -159,11 +158,11 @@
             // 
             this.BarBtnXLS.Caption = "Exportar a Excel";
             this.BarBtnXLS.CategoryGuid = new System.Guid("6ffddb2b-9015-4d97-a4c1-91613e0ef537");
-            this.BarBtnXLS.Enabled = false;
             this.BarBtnXLS.Glyph = ((System.Drawing.Image)(resources.GetObject("BarBtnXLS.Glyph")));
             this.BarBtnXLS.Id = 16;
             this.BarBtnXLS.LargeGlyph = ((System.Drawing.Image)(resources.GetObject("BarBtnXLS.LargeGlyph")));
             this.BarBtnXLS.Name = "BarBtnXLS";
+            this.BarBtnXLS.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BarBtnXLS_ItemClick);
             // 
             // BarSubItemImprimir
             // 

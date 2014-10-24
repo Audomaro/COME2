@@ -20,7 +20,13 @@ namespace COME.Clientes
         /// Renglon seleccionado o enfocado.
         /// </summary>
         int _rowSeleccionado = -1;
-
+        /// <summary>
+        /// Cuadro para guardar archicos.
+        /// </summary>
+        SaveFileDialog fichero = new SaveFileDialog();
+        /// <summary>
+        /// Acción
+        /// </summary>
         Accion _accion = Accion.Ninguna;
         #endregion
 
@@ -101,7 +107,7 @@ namespace COME.Clientes
         {
             if (!this.GClientes.IsPrintingAvailable)
             {
-                MessageBox.Show("The 'DevExpress.XtraPrinting' library is not found", "Error");
+                XtraMessageBox.Show("No se puede impremir.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -112,11 +118,31 @@ namespace COME.Clientes
         {
             if (!this.GClientes.IsPrintingAvailable)
             {
-                MessageBox.Show("The 'DevExpress.XtraPrinting' library is not found", "Error");
+                XtraMessageBox.Show("No se puede impremir.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             this.GClientes.PrintDialog();
+        }
+
+        private void BarBtnXLS_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            fichero.InitialDirectory = @"Desktop";
+            fichero.Filter = "Excel 2003 (*.xls)|*.xls|Excel 2007-2013 (*.xlsx)|*.xlsx";
+
+            GridView View = this.GvClientes;
+            if (View != null)
+            {
+
+                if (fichero.ShowDialog() == DialogResult.OK)
+                {
+                    switch (fichero.FilterIndex)
+                    {
+                        case 1: View.ExportToXls(fichero.FileName); break;
+                        case 2: View.ExportToXlsx(fichero.FileName); break;
+                    }
+                }
+            }
         }
 
         private void BarBtnPDF_ItemClick(object sender, ItemClickEventArgs e)
@@ -124,9 +150,11 @@ namespace COME.Clientes
             GridView View = this.GvClientes;
             if (View != null)
             {
-                View.OptionsPrint.ExpandAllDetails = true;
-                
-                View.ExportToPdf("MainViewData.pdf");
+                fichero.Filter = "Portable Document Format, (*.pdf)|*.pdf";
+                if (fichero.ShowDialog() == DialogResult.OK)
+                {
+                    View.ExportToPdf(fichero.FileName);
+                }
             }
         }
 
@@ -204,5 +232,6 @@ namespace COME.Clientes
             this.BarBtnConsultar.Enabled = habilitar;
         }
         #endregion
+
     }
 }
