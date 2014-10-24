@@ -23,7 +23,7 @@ namespace COME.Clientes
         /// <summary>
         /// Cuadro para guardar archicos.
         /// </summary>
-        SaveFileDialog fichero = new SaveFileDialog();
+        SaveFileDialog _fichero = new SaveFileDialog();
         /// <summary>
         /// Acción
         /// </summary>
@@ -44,6 +44,9 @@ namespace COME.Clientes
             // Cuenta la cantidad de Clientes registrados.
             this.BarStaItmClientes.EditValue = BaseDeDatos.TraeCampoSP("SP_CLIENTES_CNT");
             this._rowSeleccionado = this.GvClientes.RowCount > 0 ? 0 : -1;
+
+            // Directorio inicial
+            this._fichero.InitialDirectory = @"Desktop";
         }
                 
         private void BarBtnRegistrar_ItemClick(object sender, ItemClickEventArgs e)
@@ -127,34 +130,24 @@ namespace COME.Clientes
 
         private void BarBtnXLS_ItemClick(object sender, ItemClickEventArgs e)
         {
-            fichero.InitialDirectory = @"Desktop";
-            fichero.Filter = "Excel 2003 (*.xls)|*.xls|Excel 2007-2013 (*.xlsx)|*.xlsx";
+            this._fichero.Filter = "Excel 2003 (*.xls)|*.xls|Excel 2007-2013 (*.xlsx)|*.xlsx";
 
-            GridView View = this.GvClientes;
-            if (View != null)
+            if (this._fichero.ShowDialog() == DialogResult.OK)
             {
-
-                if (fichero.ShowDialog() == DialogResult.OK)
+                switch (this._fichero.FilterIndex)
                 {
-                    switch (fichero.FilterIndex)
-                    {
-                        case 1: View.ExportToXls(fichero.FileName); break;
-                        case 2: View.ExportToXlsx(fichero.FileName); break;
-                    }
+                    case 1: this.GvClientes.ExportToXls(this._fichero.FileName); break;
+                    case 2: this.GvClientes.ExportToXlsx(this._fichero.FileName); break;
                 }
             }
         }
 
         private void BarBtnPDF_ItemClick(object sender, ItemClickEventArgs e)
         {
-            GridView View = this.GvClientes;
-            if (View != null)
+            this._fichero.Filter = "Portable Document Format (*.pdf)|*.pdf";
+            if (this._fichero.ShowDialog() == DialogResult.OK)
             {
-                fichero.Filter = "Portable Document Format, (*.pdf)|*.pdf";
-                if (fichero.ShowDialog() == DialogResult.OK)
-                {
-                    View.ExportToPdf(fichero.FileName);
-                }
+                this.GvClientes.ExportToPdf(this._fichero.FileName);
             }
         }
 
