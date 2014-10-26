@@ -39,11 +39,11 @@ namespace COME.Clientes
         private void FrmClientesMain_Load(object sender, EventArgs e)
         {
             // Carga la lista de los Clientes desde la Base de Datos.
-            this.GClientes.DataSource = BaseDeDatos.CargaDataTable("SELECT * FROM VW_CLIENTES");
+            this.Grid.DataSource = BaseDeDatos.CargaDataTable("SELECT * FROM VW_CLIENTES");
             
             // Cuenta la cantidad de Clientes registrados.
-            this.BarStaItmClientes.EditValue = BaseDeDatos.TraeCampoSP("SP_CLIENTES_CNT");
-            this._rowSeleccionado = this.GvClientes.RowCount > 0 ? 0 : -1;
+            this.BarStaItmConteo.EditValue = BaseDeDatos.TraeCampoSP("SP_CLIENTES_CNT");
+            this._rowSeleccionado = this.Gv.RowCount > 0 ? 0 : -1;
 
             // Directorio inicial
             this._fichero.InitialDirectory = @"Desktop";
@@ -60,12 +60,12 @@ namespace COME.Clientes
             {
                 // Agrega un nuevo renglón
                 this._accion = Accion.Registrar; // Evita que se ejecute el evento  'FocusedRowChanged'
-                this.GvClientes.AddNewRow();
-                int newRow = this.GvClientes.FocusedRowHandle;
-                this.GvClientes.SetRowCellValue(newRow, "#", this.Datos_Cliente.ID);
-                this.GvClientes.SetRowCellValue(newRow, "Clave", this.Datos_Cliente.Clave);
-                this.GvClientes.SetRowCellValue(newRow, "Descripcion", this.Datos_Cliente.Descripcion);
-                this.GvClientes.FocusedRowHandle = this.GvClientes.RowCount - 1;
+                this.Gv.AddNewRow();
+                int newRow = this.Gv.FocusedRowHandle;
+                this.Gv.SetRowCellValue(newRow, "#", this.Datos_Cliente.ID);
+                this.Gv.SetRowCellValue(newRow, "Clave", this.Datos_Cliente.Clave);
+                this.Gv.SetRowCellValue(newRow, "Descripcion", this.Datos_Cliente.Descripcion);
+                this.Gv.FocusedRowHandle = this.Gv.RowCount - 1;
                 this._accion = Accion.Ninguna;
             }
         }
@@ -80,8 +80,8 @@ namespace COME.Clientes
             if (this.Datos_Cliente.EjecutarAccion)
             {
                 // Modificar el contenido del renglón seleccionado con los datos del objeto Cliente.
-                this.GvClientes.SetRowCellValue(this._rowSeleccionado, "Clave", this.Datos_Cliente.Clave);
-                this.GvClientes.SetRowCellValue(this._rowSeleccionado, "Descripcion", this.Datos_Cliente.Descripcion);
+                this.Gv.SetRowCellValue(this._rowSeleccionado, "Clave", this.Datos_Cliente.Clave);
+                this.Gv.SetRowCellValue(this._rowSeleccionado, "Descripcion", this.Datos_Cliente.Descripcion);
             }
         }
                 
@@ -102,30 +102,30 @@ namespace COME.Clientes
             if (this.Datos_Cliente.EjecutarAccion)
             {
                 // Elimina visualmente el renglón seleccionado.
-                this.GvClientes.DeleteRow(this._rowSeleccionado);
+                this.Gv.DeleteRow(this._rowSeleccionado);
             }
         }
         
         private void BarBtnItmVistaPreliminar_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (!this.GClientes.IsPrintingAvailable)
+            if (!this.Grid.IsPrintingAvailable)
             {
                 XtraMessageBox.Show("No se puede impremir.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            this.GClientes.ShowPrintPreview();
+            this.Grid.ShowPrintPreview();
         }
 
         private void BarBtnItmImprimir_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (!this.GClientes.IsPrintingAvailable)
+            if (!this.Grid.IsPrintingAvailable)
             {
                 XtraMessageBox.Show("No se puede impremir.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            this.GClientes.PrintDialog();
+            this.Grid.PrintDialog();
         }
 
         private void BarBtnXLS_ItemClick(object sender, ItemClickEventArgs e)
@@ -136,8 +136,8 @@ namespace COME.Clientes
             {
                 switch (this._fichero.FilterIndex)
                 {
-                    case 1: this.GvClientes.ExportToXls(this._fichero.FileName); break;
-                    case 2: this.GvClientes.ExportToXlsx(this._fichero.FileName); break;
+                    case 1: this.Gv.ExportToXls(this._fichero.FileName); break;
+                    case 2: this.Gv.ExportToXlsx(this._fichero.FileName); break;
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace COME.Clientes
             this._fichero.Filter = "Portable Document Format (*.pdf)|*.pdf";
             if (this._fichero.ShowDialog() == DialogResult.OK)
             {
-                this.GvClientes.ExportToPdf(this._fichero.FileName);
+                this.Gv.ExportToPdf(this._fichero.FileName);
             }
         }
 
@@ -157,7 +157,7 @@ namespace COME.Clientes
             this.Dispose();
         }
 
-        private void GvClientes_FocusedRowChanged(object sender, FocusedRowChangedEventArgs e)
+        private void Gv_FocusedRowChanged(object sender, FocusedRowChangedEventArgs e)
         {
             if (this._accion != Accion.Registrar)
             {
@@ -176,9 +176,9 @@ namespace COME.Clientes
             }
         }
 
-        private void GvClientes_RowDeleted(object sender, DevExpress.Data.RowDeletedEventArgs e)
+        private void Gv_RowDeleted(object sender, DevExpress.Data.RowDeletedEventArgs e)
         {
-            if (this._rowSeleccionado <= this.GvClientes.RowCount - 1) 
+            if (this._rowSeleccionado <= this.Gv.RowCount - 1) 
             {
                 // Asigna los datos del renglón al Objeto Cliente si este se encuentra en medio de la lista,
                 // ya que a eliminar no se sucede el evento 'FocusedRowChanged'
@@ -186,10 +186,10 @@ namespace COME.Clientes
             } 
         }
 
-        private void GvClientes_RowCountChanged(object sender, EventArgs e)
+        private void Gv_RowCountChanged(object sender, EventArgs e)
         {
             // Actualiza la cantidad de Clientes registrados.
-            this.BarStaItmClientes.EditValue = BaseDeDatos.TraeCampoSP("SP_CLIENTES_CNT");
+            this.BarStaItmConteo.EditValue = BaseDeDatos.TraeCampoSP("SP_CLIENTES_CNT");
         }
         #endregion
 
@@ -208,9 +208,9 @@ namespace COME.Clientes
             if (tempRow > -1)
             {
                 // Si existe renglón enfocado se pasan sus datos al objeto Cliente.
-                this.Datos_Cliente.ID = Convert.ToInt32(this.GvClientes.GetDataRow(tempRow)["#"].ToString());
-                this.Datos_Cliente.Clave = this.GvClientes.GetDataRow(tempRow)["Clave"].ToString();
-                this.Datos_Cliente.Descripcion = this.GvClientes.GetDataRow(tempRow)["Descripcion"].ToString();
+                this.Datos_Cliente.ID = Convert.ToInt32(this.Gv.GetDataRow(tempRow)["#"].ToString());
+                this.Datos_Cliente.Clave = this.Gv.GetDataRow(tempRow)["Clave"].ToString();
+                this.Datos_Cliente.Descripcion = this.Gv.GetDataRow(tempRow)["Descripcion"].ToString();
             }
         }
 
